@@ -87,10 +87,12 @@ def xml_to_yolo(classes = ["DAN"],models_dir = 'models-heloisa-v3'):
     # Create obj.data and obj.names
     with open(os.path.join(models_dir,'obj.data'), 'w') as f:
         f.write(f'''classes = {len(classes)}
-train  = train.txt  
-valid  = test.txt  
-names = obj.names  
+train  = {join(models_dir,train.txt)}  
+valid  = {join(models_dir,test.txt)}  
+names = {join(models_dir,obj.names)}  
 backup = backup/''')
 
     with open(os.path.join(models_dir,'obj.names'), 'w') as f:
         f.writelines(classes)
+        
+print('use the function xml_to_yolo()')
