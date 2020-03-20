@@ -70,26 +70,28 @@ time.sleep(1)
 
 print('starting')
 
-assert os.path.exists(f'{models_dir}'), f"Pasta {models_dir} não encontrada"
-print(models_dir)
+
+def main(classes = ["DAN"],models_dir = 'models-heloisa-v3'):
+    assert os.path.exists(f'{models_dir}'), f"Pasta {models_dir} não encontrada"
+    print(models_dir)
 
 
-## Take Annotations xml to .txt and create train and test dot txt
-for dir_name in ['test', 'train']:
-    train_test_txt(dir_name)
-    for file in os.listdir(f'{models_dir}/{dir_name}/annotations/'):
-        if not os.path.exists(f'{models_dir}/{dir_name}/labels/'):
-            os.makedirs(f'{models_dir}/{dir_name}/labels/')
-        convert_annotation(f'models-heloisa-v3/{dir_name}',file[:-4])
+    ## Take Annotations xml to .txt and create train and test dot txt
+    for dir_name in ['test', 'train']:
+        train_test_txt(dir_name)
+        for file in os.listdir(f'{models_dir}/{dir_name}/annotations/'):
+            if not os.path.exists(f'{models_dir}/{dir_name}/labels/'):
+                os.makedirs(f'{models_dir}/{dir_name}/labels/')
+            convert_annotation(f'models-heloisa-v3/{dir_name}',file[:-4])
 
-        
-# Create obj.data and obj.names
-with open(os.path.join(models_dir,'obj.data'), 'w') as f:
-    f.write(f'''classes = {len(classes)}
-train  = train.txt  
-valid  = test.txt  
-names = obj.names  
-backup = backup/''')
 
-with open(os.path.join(models_dir,'obj.names'), 'w') as f:
-    f.writelines(classes)
+    # Create obj.data and obj.names
+    with open(os.path.join(models_dir,'obj.data'), 'w') as f:
+        f.write(f'''classes = {len(classes)}
+    train  = train.txt  
+    valid  = test.txt  
+    names = obj.names  
+    backup = backup/''')
+
+    with open(os.path.join(models_dir,'obj.names'), 'w') as f:
+        f.writelines(classes)
