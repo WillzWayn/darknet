@@ -26,6 +26,10 @@ def convert(size, box):
     h = h*dh
     return (x,y,w,h)
 
+def train_test_txt(dir_name):
+    with open(os.path.join(models_dir, f'{dir_name}.txt'), 'w') as f:
+        f.writelines([f'{dir_name}/images/{i}\n' for i in os.listdir(f'{models_dir}/{dir_name}/images/')])
+
 def convert_annotation(main_path_images:'/home/user/models-eloisa-v3/test/',file_to_edit:'str'):
     """You need to put your files like this:
             .
@@ -64,13 +68,28 @@ wd = getcwd()
 print(convert_annotation.__doc__)
 time.sleep(1)
 
-print('starting ...')
+print('starting')
 
 assert os.path.exists(f'{models_dir}'), f"Pasta {models_dir} não encontrada"
+print(models_dir)
+
+
+## Take Annotations xml to .txt and create train and test dot txt
 for dir_name in ['test', 'train']:
+    train_test_txt(dir_name)
     for file in os.listdir(f'{models_dir}/{dir_name}/annotations/'):
         if not os.path.exists(f'{models_dir}/{dir_name}/labels/'):
             os.makedirs(f'{models_dir}/{dir_name}/labels/')
         convert_annotation(f'models-heloisa-v3/{dir_name}',file[:-4])
+
         
-print('done')
+# Create obj.data and obj.names
+with open(os.path.join(models_dir,'obj.data'), 'w') as f:
+    f.write(f'''classes = {len(classes)}
+train  = train.txt  
+valid  = test.txt  
+names = obj.names  
+backup = backup/''')
+
+with open(os.path.join(models_dir,'obj.names'), 'w') as f:
+    f.writelines(classes)
