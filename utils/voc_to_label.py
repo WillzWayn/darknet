@@ -8,7 +8,6 @@ import time
 
 classes = ["DAN"]
 
-dir_name='test'
 models_dir = 'models-heloisa-v3'
 
 
@@ -28,7 +27,7 @@ def convert(size, box):
 
 def train_test_txt(dir_name):
     with open(os.path.join(models_dir, f'{dir_name}.txt'), 'w') as f:
-        f.writelines([f'{models_dir}/{dir_name}/images/{i}\n' for i in os.listdir(f'{models_dir}/{dir_name}/images/')])
+        f.writelines([f'{join(models_dir,dir_name)}/images/{i}\n' for i in os.listdir(f'{models_dir}/{dir_name}/images/')])
 
 def convert_annotation(main_path_images:'/home/user/models-eloisa-v3/test/',file_to_edit:'str'):
     """You need to put your files like this:
@@ -44,7 +43,7 @@ def convert_annotation(main_path_images:'/home/user/models-eloisa-v3/test/',file
                  
     """
     in_file = open(main_path_images+f'/annotations/{file_to_edit}.xml')
-    out_file = open(main_path_images+f'/labels/{file_to_edit}.txt', 'w')
+    out_file = open(main_path_images+f'/images/{file_to_edit}.txt', 'w')
     tree=ET.parse(in_file)
     root = tree.getroot()
     size = root.find('size')
@@ -71,7 +70,7 @@ time.sleep(1)
 print('starting')
 
 
-def main(classes = ["DAN"],models_dir = 'models-heloisa-v3'):
+def xml_to_yolo(classes = ["DAN"],models_dir = 'models-heloisa-v3'):
     assert os.path.exists(f'{models_dir}'), f"Pasta {models_dir} não encontrada"
     print(models_dir)
 
@@ -80,18 +79,18 @@ def main(classes = ["DAN"],models_dir = 'models-heloisa-v3'):
     for dir_name in ['test', 'train']:
         train_test_txt(dir_name)
         for file in os.listdir(f'{models_dir}/{dir_name}/annotations/'):
-            if not os.path.exists(f'{models_dir}/{dir_name}/labels/'):
-                os.makedirs(f'{models_dir}/{dir_name}/labels/')
+#             if not os.path.exists(f'{models_dir}/{dir_name}/labels/'):
+#                 os.makedirs(f'{models_dir}/{dir_name}/labels/')
             convert_annotation(f'models-heloisa-v3/{dir_name}',file[:-4])
 
 
     # Create obj.data and obj.names
     with open(os.path.join(models_dir,'obj.data'), 'w') as f:
         f.write(f'''classes = {len(classes)}
-    train  = {os.path.join(models_dir,'train.txt'}  
-    valid  = {os.path.join(models_dir,'test.txt'} 
-    names = {os.path.join(models_dir,'obj.names'}   
-    backup = backup/''')
+train  = train.txt  
+valid  = test.txt  
+names = obj.names  
+backup = backup/''')
 
     with open(os.path.join(models_dir,'obj.names'), 'w') as f:
         f.writelines(classes)
