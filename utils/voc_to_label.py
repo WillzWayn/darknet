@@ -88,9 +88,9 @@ def main(classes = ["DAN"],models_dir = 'models-heloisa-v3'):
     # Create obj.data and obj.names
     with open(os.path.join(models_dir,'obj.data'), 'w') as f:
         f.write(f'''classes = {len(classes)}
-    train  = train.txt  
-    valid  = test.txt  
-    names = obj.names  
+    train  = {os.path.join(models_dir,'train.txt'}  
+    valid  = {os.path.join(models_dir,'test.txt'} 
+    names = {os.path.join(models_dir,'obj.names'}   
     backup = backup/''')
 
     with open(os.path.join(models_dir,'obj.names'), 'w') as f:
