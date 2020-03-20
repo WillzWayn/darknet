@@ -28,7 +28,7 @@ def convert(size, box):
 
 def train_test_txt(dir_name):
     with open(os.path.join(models_dir, f'{dir_name}.txt'), 'w') as f:
-        f.writelines([f'{dir_name}/images/{i}\n' for i in os.listdir(f'{models_dir}/{dir_name}/images/')])
+        f.writelines([f'{models_dir}/{dir_name}/images/{i}\n' for i in os.listdir(f'{models_dir}/{dir_name}/images/')])
 
 def convert_annotation(main_path_images:'/home/user/models-eloisa-v3/test/',file_to_edit:'str'):
     """You need to put your files like this:
